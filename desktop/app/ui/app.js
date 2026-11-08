@@ -251,6 +251,24 @@
     const loop = (now) => { if (now - last > 33) { last = now; tick(); } requestAnimationFrame(loop); };
     requestAnimationFrame(loop);
   }
+  /* a small secret: seven quick taps on the logo */
+  (() => {
+    let taps = [];
+    document.querySelector(".brand").addEventListener("click", () => {
+      const now = Date.now();
+      taps = taps.filter((t) => now - t < 3000).concat(now);
+      if (taps.length < 7) return;
+      taps = [];
+      const note = document.createElement("div");
+      note.className = "egg";
+      note.setAttribute("role", "status");
+      note.textContent = "Made by Afif. Nice find.";
+      document.body.append(note);
+      setTimeout(() => note.remove(), 3200);
+    });
+  })();
+  console.log("%cclearmic", "font:600 14px system-ui;color:#146B67", "psst: atob('QWZpZiB3YXMgaGVyZQ==')");
+
   if (tauri) { loadPairing(); loadParams(); }
   go(views.includes(location.hash.slice(1)) ? location.hash.slice(1) : "live");
   refresh(); setInterval(refresh, 500);
