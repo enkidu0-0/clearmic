@@ -1,0 +1,20 @@
+[package]
+name = "clearmic-dsp"
+version.workspace = true
+edition.workspace = true
+
+[features]
+# DeepFilterNet3 denoiser (pure Rust, tract). Off by default so the workspace builds fast.
+dfn3 = ["dep:deep_filter", "dep:ndarray", "dep:tract-core", "dep:tract-onnx", "dep:tract-pulse", "dep:tract-hir"]
+# DPDFNet (Ceva, Apache-2.0): streaming ONNX model run with tract, pure Rust.
+dpdfnet = ["dep:tract-onnx", "dep:tract-core", "dep:realfft"]
+
+[dependencies]
+deep_filter = { git = "https://github.com/Rikorose/DeepFilterNet", package = "deep_filter", optional = true, default-features = false, features = ["tract", "default-model"] }
+ndarray = { version = "0.15", optional = true }
+# Pinned: libDF (git) is written against tract 0.21.4 and breaks on newer 0.21.x releases.
+tract-core = { version = "=0.21.4", optional = true }
+tract-onnx = { version = "=0.21.4", optional = true }
+tract-pulse = { version = "=0.21.4", optional = true }
+tract-hir = { version = "=0.21.4", optional = true }
+realfft = { version = "3.3", optional = true }

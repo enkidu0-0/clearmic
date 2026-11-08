@@ -1,0 +1,15 @@
+# build output and tools, not source
+desktop/target/
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+spike/.venv/
+spike/**/__pycache__/
+.hallmark/
+release/
+# personal recordings and test results
+tools/test-clips/
+tools/bench/out/
+*.wav
+*.aac

@@ -1,0 +1,25 @@
+[package]
+name = "clearmic-app"
+version.workspace = true
+edition.workspace = true
+description = "ClearMic: use your phone as a PC microphone with AI noise removal"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["tray-icon", "image-png"] }
+tauri-plugin-single-instance = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+qrcode = { version = "0.14", default-features = false, features = ["svg"] }
+getrandom = "0.2"
+clearmic-engine = { path = "../../crates/engine", features = ["dpdfnet"] }
+clearmic-dsp = { path = "../../crates/dsp" }
+clearmic-protocol = { path = "../../crates/protocol" }
+
+[dev-dependencies]
+hound = "3.5"
+
+[target.'cfg(windows)'.dependencies]
+winreg = "0.52"

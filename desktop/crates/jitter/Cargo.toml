@@ -1,0 +1,4 @@
+[package]
+name = "clearmic-jitter"
+version.workspace = true
+edition.workspace = true

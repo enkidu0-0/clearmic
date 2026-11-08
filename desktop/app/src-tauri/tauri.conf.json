@@ -1,0 +1,38 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "ClearMic",
+  "version": "0.1.0",
+  "identifier": "dev.clearmic.app",
+  "build": {
+    "frontendDist": "../ui"
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": [
+      "nsis"
+    ],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.png",
+      "icons/icon.ico",
+      "icons/icon.icns"
+    ],
+    "resources": {
+      "../../models/baseline.onnx": "models/baseline.onnx",
+      "../../models/dpdfnet2.onnx": "models/dpdfnet2.onnx",
+      "../../models/dpdfnet2_48khz_hr.onnx": "models/dpdfnet2_48khz_hr.onnx"
+    },
+    "macOS": {
+      "minimumSystemVersion": "11.0"
+    }
+  }
+}

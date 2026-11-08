@@ -1,0 +1,20 @@
+[package]
+name = "clearmic-engine"
+version.workspace = true
+edition.workspace = true
+
+[features]
+dfn3 = ["clearmic-dsp/dfn3"]
+dpdfnet = ["clearmic-dsp/dpdfnet"]
+
+[dependencies]
+clearmic-protocol = { path = "../protocol" }
+clearmic-jitter = { path = "../jitter" }
+clearmic-dsp = { path = "../dsp" }
+cpal = "0.15"
+rtrb = "0.3"
+hound = "3.5"
+opus-decoder = "0.1"
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.59", features = ["Win32_Foundation", "Win32_System_Threading"] }

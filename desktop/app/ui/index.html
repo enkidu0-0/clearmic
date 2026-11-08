@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ClearMic, your phone as a clean microphone</title>
+<meta name="description" content="Use your phone as a PC microphone with AI noise removal and a podcast voice chain.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500&family=Figtree:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css">
+</head>
+<body data-state="connected">
+<div class="air" aria-hidden="true"></div>
+
+<header class="bar">
+  <div class="bar__in container">
+    <a class="brand" href="#live" aria-label="ClearMic home"><svg class="brand__mark" viewBox="0 0 1024 1024" aria-hidden="true"><rect width="1024" height="1024" rx="220" fill="#146B67"/><g fill="#FBF9F4"><rect x="359" y="155" width="306" height="520" rx="153"/><path d="M298.5 519A213.5 213.5 0 0 0 725.5 519" fill="none" stroke="#FBF9F4" stroke-width="56" stroke-linecap="round"/><rect x="483" y="732" width="58" height="118"/><rect x="382" y="822" width="260" height="56" rx="28"/></g><g fill="#146B67"><rect x="408" y="379" width="44" height="130" rx="22"/><rect x="490" y="306" width="44" height="252" rx="22"/><rect x="572" y="379" width="44" height="130" rx="22"/></g></svg><span>ClearMic</span></a>
+
+    <nav class="tabs" role="tablist" aria-label="Sections">
+      <button class="tab" role="tab" id="tab-live" data-view="live" aria-controls="view-live" aria-selected="true" type="button">Live</button>
+      <button class="tab" role="tab" id="tab-sound" data-view="sound" aria-controls="view-sound" aria-selected="false" tabindex="-1" type="button">Sound</button>
+      <button class="tab" role="tab" id="tab-phone" data-view="phone" aria-controls="view-phone" aria-selected="false" tabindex="-1" type="button">Phone</button>
+      <button class="tab" role="tab" id="tab-output" data-view="output" aria-controls="view-output" aria-selected="false" tabindex="-1" type="button">Output</button>
+      <span class="tabs__ink" aria-hidden="true"></span>
+    </nav>
+
+    <div class="bar__status" role="status" aria-live="polite">
+      <span class="pill" id="status-pill">Phone connected</span>
+      <span class="muted bar__detail" id="status-detail">Pixel 8, Wi-Fi</span>
+      <span class="pill pill--note" id="preview-note" hidden>Preview data</span>
+    </div>
+  </div>
+</header>
+
+<main class="container stage">
+
+  <!-- Live: what your phone hears over what everyone else hears -->
+  <section class="view" id="view-live" role="tabpanel" aria-labelledby="tab-live">
+    <div class="grid grid--live">
+      <section class="card signal rise" style="--i:0" aria-labelledby="signal-h">
+        <div class="signal__head">
+          <h1 id="signal-h">Your voice, before and after</h1>
+          <button class="key" type="button" id="btn-compare" aria-pressed="false">Hold to hear original</button>
+        </div>
+
+        <div class="lanes" data-when="connected">
+          <div class="lane">
+            <div class="lane__label"><span>From your phone</span><span class="muted" id="lvl-in">Raw</span></div>
+            <div class="bed"><canvas class="lane__wave" id="wave-in" height="120" aria-label="Live waveform of the raw phone microphone"></canvas></div>
+          </div>
+          <div class="lane">
+            <div class="lane__label"><span>To Discord and other apps</span><span class="muted" id="lvl-out">Cleaned</span></div>
+            <div class="bed bed--clean"><canvas class="lane__wave" id="wave-out" height="120" aria-label="Live waveform after noise removal"></canvas></div>
+          </div>
+          <dl class="figures">
+            <div><dt>Delay</dt><dd class="figure num"><span id="fig-delay">0</span><small>ms</small></dd></div>
+            <div><dt>Noise removed</dt><dd class="figure num"><span id="fig-nr">0</span><small>dB</small></dd></div>
+            <div><dt>Lost packets</dt><dd class="figure num"><span id="fig-loss">0</span><small>%</small></dd></div>
+            <div><dt>CPU</dt><dd class="figure num"><span id="fig-cpu">0</span><small>%</small></dd></div>
+          </dl>
+        </div>
+
+        <div class="waiting" data-when="waiting">
+          <h2>Waiting for a phone</h2>
+          <p>Open ClearMic on your phone and scan the pairing code.</p>
+          <button class="key key--primary" type="button" id="btn-show-pair">Show pairing code</button>
+        </div>
+
+        <div class="skeleton" data-when="connecting" aria-busy="true">
+          <div class="skeleton__lane"></div>
+          <div class="skeleton__lane"></div>
+          <p class="muted">Connecting to your phone</p>
+        </div>
+
+        <div class="fail" data-when="error">
+          <h2 id="fail-title">The phone stopped sending</h2>
+          <p id="fail-text">The connection dropped after the last packet. Check that both devices are on the same Wi-Fi, or plug in a USB cable.</p>
+          <div class="row">
+            <button class="key key--primary" type="button" id="btn-retry">Reconnect</button>
+            <button class="key" type="button" id="btn-usb">Use USB instead</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card panel rise" style="--i:1" aria-labelledby="nr-h">
+        <h2 id="nr-h">Noise removal</h2>
+        <div class="field">
+          <label for="strength">Strength <output class="num" id="strength-out" for="strength">80%</output></label>
+          <input type="range" id="strength" name="strength" min="0" max="100" step="1" value="80">
+          <p class="help muted">Lower keeps a little room tone. Full removal can sound robotic.</p>
+        </div>
+        <div class="field">
+          <span class="field__label">Power use</span>
+          <fieldset class="seg" aria-label="Noise removal power use">
+            <legend class="visually-hidden">Power use</legend>
+            <span class="seg__thumb" aria-hidden="true"></span>
+            <label class="seg__opt"><input type="radio" name="performance" value="efficient" checked><span class="seg__pill">Efficient</span></label>
+            <label class="seg__opt"><input type="radio" name="performance" value="balanced"><span class="seg__pill">Balanced</span></label>
+            <label class="seg__opt"><input type="radio" name="performance" value="quality"><span class="seg__pill">Quality</span></label>
+            <label class="seg__opt"><input type="radio" name="performance" value="off"><span class="seg__pill">Off</span></label>
+          </fieldset>
+          <p class="help muted" id="perf-help">Lightest on the CPU. Best while you game.</p>
+          <p class="help note" id="perf-note" hidden>Your PC was busy, so ClearMic switched to a lighter noise remover.</p>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <!-- Sound: presets and the voice chain -->
+  <section class="view" id="view-sound" role="tabpanel" aria-labelledby="tab-sound" hidden>
+    <div class="grid grid--sound">
+      <section class="card panel rise" style="--i:0" aria-labelledby="pre-h">
+        <h2 id="pre-h">Preset</h2>
+        <fieldset class="seg" aria-label="Preset">
+          <legend class="visually-hidden">Preset</legend>
+          <span class="seg__thumb" aria-hidden="true"></span>
+          <label class="seg__opt"><input type="radio" name="preset" value="natural"><span class="seg__pill">Natural</span></label>
+          <label class="seg__opt"><input type="radio" name="preset" value="discord" checked><span class="seg__pill">Discord</span></label>
+          <label class="seg__opt"><input type="radio" name="preset" value="podcast"><span class="seg__pill">Podcast</span></label>
+        </fieldset>
+        <p class="help muted">A preset sets the switches next to it. Change any switch to fine-tune.</p>
+      </section>
+      <section class="card panel rise" style="--i:1" aria-labelledby="chain-h">
+        <h2 id="chain-h">Voice chain</h2>
+        <ul class="chain">
+          <li><label for="c-hpf">Remove rumble</label><input class="switch" role="switch" type="checkbox" id="c-hpf" name="hpf" checked></li>
+          <li><label for="c-gate">Silence between words</label><input class="switch" role="switch" type="checkbox" id="c-gate" name="gate" checked></li>
+          <li><label for="c-eq">Voice clarity</label><input class="switch" role="switch" type="checkbox" id="c-eq" name="eq" checked></li>
+          <li><label for="c-comp">Even out volume</label><input class="switch" role="switch" type="checkbox" id="c-comp" name="comp" checked></li>
+          <li><label for="c-ess">Soften harsh S sounds</label><input class="switch" role="switch" type="checkbox" id="c-ess" name="deess"></li>
+        </ul>
+      </section>
+    </div>
+  </section>
+
+  <!-- Phone: pairing -->
+  <section class="view" id="view-phone" role="tabpanel" aria-labelledby="tab-phone" hidden>
+    <section class="card pair rise" style="--i:0" aria-labelledby="pair-h">
+      <div class="pair__qr" data-slot role="img" aria-label="Pairing code appears here">
+        <span class="muted">The pairing code appears here once the receiver is running</span>
+      </div>
+      <div class="pair__text">
+        <h2 id="pair-h">Pair your phone</h2>
+        <ol class="pair__steps">
+          <li>Open ClearMic on your phone</li>
+          <li>Tap scan, then point it at this code</li>
+          <li>In Discord, pick <b>CABLE Output</b> as your microphone</li>
+        </ol>
+        <p class="muted">Or type it by hand. Address <span class="num" id="pair-addr">waiting for the receiver</span>, key <span class="num key-text" id="pair-key"></span></p>
+        <button class="key" type="button" id="btn-pair" title="Makes a new code; phones paired before must scan again">New pairing code</button>
+      </div>
+    </section>
+  </section>
+
+  <!-- Output -->
+  <section class="view" id="view-output" role="tabpanel" aria-labelledby="tab-output" hidden>
+    <div class="grid grid--out">
+      <section class="card panel rise" style="--i:0" aria-labelledby="out-h">
+        <h2 id="out-h">Output</h2>
+        <div class="field">
+          <label for="out-dev">Send sound to</label>
+          <select id="out-dev" name="output" class="select" aria-label="Output device">
+            <option value="">Looking for devices</option>
+          </select>
+          <p class="help muted">In Discord, choose the matching Output device as your microphone.</p>
+          <p class="help note" id="out-note" hidden></p>
+        </div>
+        <ul class="chain">
+          <li><label for="c-monitor">Hear my voice on this computer</label><input class="switch" role="switch" type="checkbox" id="c-monitor" name="monitor"></li>
+        </ul>
+        <p class="help muted">Off by default, so you do not hear yourself back. Turn it on to check how you sound.</p>
+        <p class="help note" id="mon-note" hidden></p>
+      </section>
+      <section class="card panel rise" style="--i:1" aria-labelledby="bg-h">
+        <h2 id="bg-h">Background</h2>
+        <ul class="chain">
+          <li id="boot-row"><label for="c-boot">Start with Windows</label><input class="switch" role="switch" type="checkbox" id="c-boot" name="autostart"></li>
+        </ul>
+        <p class="help muted">Closing the window keeps ClearMic running in the tray. With the window closed it uses very little memory, and while no phone is connected it uses almost no CPU.</p>
+        <button class="key" type="button" id="btn-hide">Close window, keep running</button>
+      </section>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot container">
+  <p class="muted">Your audio stays on your network. Nothing is uploaded.</p>
+  <nav class="dev" aria-label="Preview states" id="dev" hidden>
+    <a class="key" href="?state=connected&dev">Connected</a>
+    <a class="key" href="?state=waiting&dev">Waiting</a>
+    <a class="key" href="?state=connecting&dev">Connecting</a>
+    <a class="key" href="?state=error&dev">Error</a>
+  </nav>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
