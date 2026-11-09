@@ -117,7 +117,9 @@
     for (const k of ["hpf", "gate", "eq", "comp", "deess"]) { const el = document.querySelector(`input[name="${k}"]`); if (el) el.checked = p[k]; }
     const sel = $("out-dev");
     const cur = (p.output || "").toLowerCase();
-    const opts = p.outputs.map((o) => new Option(o, o, false, cur !== "" && o.toLowerCase().includes(cur)));
+    // the driver's own name ("CABLE Input (VB-Audio Virtual Cable)") is shown as ClearMic; the real name stays the value
+    const kind = (o) => /blackhole/i.test(o) ? "BlackHole" : /cable/i.test(o) ? "VB-Cable" : /voicemeeter/i.test(o) ? "Voicemeeter" : "virtual cable";
+    const opts = p.outputs.map((o, i) => new Option(`ClearMic microphone${p.outputs.length > 1 ? " " + (i + 1) : ""} (${kind(o)})`, o, false, cur !== "" && o.toLowerCase().includes(cur)));
     if (cur.startsWith("wav:")) opts.push(new Option("File " + p.output.slice(4), p.output, true, true));
     sel.replaceChildren(new Option("Choose where the sound goes", "", false, cur === ""), ...opts);
   }
