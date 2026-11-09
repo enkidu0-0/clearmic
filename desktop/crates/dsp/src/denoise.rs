@@ -131,13 +131,21 @@ mod dpdfnet {
     impl DpdfNet {
         /// Loads a DPDFNet streaming ONNX file (`dpdfnet2_48khz_hr`, `dpdfnet2`, `baseline`...).
         pub fn from_file(path: &str) -> Result<Self, String> {
-            let bytes = std::fs::read(path).map_err(|e| format!("{path}: {e}"))?;
-            Self::from_bytes(&bytes)
+            let proto = {
+                // the raw file is dropped as soon as it is parsed
+                let bytes = std::fs::read(path).map_err(|e| format!("{path}: {e}"))?;
+                tract_onnx::onnx().proto_model_for_read(&mut std::io::Cursor::new(&bytes)).map_err(|e| e.to_string())?
+            };
+            Self::from_proto(proto)
         }
 
         pub fn from_bytes(bytes: &[u8]) -> Result<Self, String> {
+            let proto = tract_onnx::onnx().proto_model_for_read(&mut std::io::Cursor::new(bytes)).map_err(|e| e.to_string())?;
+            Self::from_proto(proto)
+        }
+
+        fn from_proto(proto: tract_onnx::pb::ModelProto) -> Result<Self, String> {
             let onnx = tract_onnx::onnx();
-            let proto = onnx.proto_model_for_read(&mut std::io::Cursor::new(bytes)).map_err(|e| e.to_string())?;
 
             let win: usize = meta(&proto, "window_length")?.parse().map_err(|_| "bad window_length")?;
             let sr: usize = meta(&proto, "sample_rate")?.parse().map_err(|_| "bad sample_rate")?;
@@ -166,11 +174,10 @@ mod dpdfnet {
             init_state[..erb_n].copy_from_slice(&erb_init);
             init_state[erb_n..erb_n + spec_n].copy_from_slice(&spec_init);
 
-            let plan = onnx
-                .model_for_proto_model(&proto)
-                .and_then(|m| m.into_optimized())
-                .and_then(|m| m.into_runnable())
-                .map_err(|e| e.to_string())?;
+            // each stage is freed before the next is built, which keeps the peak (and what the allocator holds on to) low
+            let typed = onnx.model_for_proto_model(&proto).map_err(|e| e.to_string())?;
+            drop(proto);
+            let plan = typed.into_optimized().and_then(|m| m.into_runnable()).map_err(|e| e.to_string())?;
 
             // Vorbis window
             let window: Vec<f32> = (0..win)

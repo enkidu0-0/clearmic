@@ -151,7 +151,19 @@ impl Shared {
 
     /// The virtual cable if one is installed, otherwise nothing: playing a mic to the speakers would echo.
     fn default_output() -> Option<String> {
-        CpalSink::list_outputs().into_iter().find(|n| n.to_lowercase().contains("cable input"))
+        let all = Self::cable_outputs();
+        all.iter().find(|n| n.to_lowercase().contains("cable input")).or(all.first()).cloned()
+    }
+
+    /// Only virtual cables may carry the mic sound: a real speaker here would play your own voice back, whatever the
+    /// "hear my voice" switch says. Hearing yourself has its own switch.
+    fn is_virtual(name: &str) -> bool {
+        let n = name.to_lowercase();
+        ["cable", "vb-audio", "blackhole", "voicemeeter", "virtual", "loopback", "soundflower"].iter().any(|k| n.contains(k))
+    }
+
+    fn cable_outputs() -> Vec<String> {
+        CpalSink::list_outputs().into_iter().filter(|n| Self::is_virtual(n)).collect()
     }
 
     /// (Re)starts the receiver with the current settings.
@@ -170,7 +182,13 @@ impl Shared {
             let key = clearmic_protocol::parse_key_hex(&cfg.key_hex).ok_or("the pairing key is damaged, pair again")?;
             // The receiver must always listen, or the phone gets "connection refused". With no virtual cable the sound
             // goes nowhere, and the window says so.
-            let wanted = cfg.output.clone().or_else(|| std::env::var("CLEARMIC_OUTPUT").ok()).or_else(Self::default_output);
+            let mut speakers_refused = false;
+            let saved = cfg.output.clone().filter(|o| {
+                let ok = o.starts_with("wav:") || Self::is_virtual(o);
+                speakers_refused = !ok;
+                ok
+            });
+            let wanted = saved.or_else(|| std::env::var("CLEARMIC_OUTPUT").ok()).or_else(Self::default_output);
             let (mut sink, mut note): (Box<dyn Sink>, Option<String>) = match wanted {
                 Some(o) if o.starts_with("wav:") => match WavSink::create(&o[4..]) {
                     Ok(w) => (Box::new(w), None),
@@ -187,6 +205,9 @@ impl Shared {
             }
             // the speakers are always wired in, but silent until the switch is on or the compare button is held
             sink = Box::new(TeeSink(vec![sink, Box::new(MonitorSink::new(self.monitor.clone()))]));
+            if speakers_refused && note.is_some() {
+                note = Some("A real speaker was selected as the output, which would play your voice out loud. ClearMic ignored it. Pick a virtual cable (VB-Cable on Windows, BlackHole on Mac) under Output. Use \"Hear my voice\" to listen to yourself.".to_string());
+            }
             notice = note;
             let (denoise, fallbacks) = self.denoise_ladder(&cfg.performance)?;
             let eng = Engine::start(
@@ -295,8 +316,8 @@ impl Shared {
             autostart_supported: crate::autostart::SUPPORTED,
             hpf: s.hpf, gate: s.gate, eq: s.eq, comp: s.comp, deess: s.deess,
             monitor: i.cfg.monitor,
-            output: i.cfg.output.clone().or_else(Self::default_output).unwrap_or_default(),
-            outputs: CpalSink::list_outputs(),
+            output: i.cfg.output.clone().filter(|o| o.starts_with("wav:") || Self::is_virtual(o)).or_else(Self::default_output).unwrap_or_default(),
+            outputs: Self::cable_outputs(),
         }
     }
 
@@ -351,7 +372,11 @@ impl Shared {
                     false
                 }
                 "output" => {
-                    i.cfg.output = Some(value.as_str().ok_or("output must be text")?.to_string());
+                    let v = value.as_str().ok_or("output must be text")?;
+                    if !(v.starts_with("wav:") || Self::is_virtual(v)) {
+                        return Err("only a virtual cable can be the output; use \"Hear my voice\" to listen".into());
+                    }
+                    i.cfg.output = Some(v.to_string());
                     true
                 }
                 _ => return Err(format!("unknown setting '{name}'")),
@@ -364,6 +389,16 @@ impl Shared {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn only_virtual_cables_can_carry_the_mic() {
+        for ok in ["CABLE Input (VB-Audio Virtual Cable)", "BlackHole 2ch", "Voicemeeter Input"] {
+            assert!(Shared::is_virtual(ok), "{ok}");
+        }
+        for no in ["FxSound Speakers (FxSound Audio Enhancer)", "Speakers (Realtek Audio)", "MacBook Pro Speakers"] {
+            assert!(!Shared::is_virtual(no), "{no}");
+        }
+    }
+
     use super::*;
     use clearmic_protocol::{Cipher, FLAG_RAW16, FRAME_SAMPLES};
     use std::time::{Duration, Instant};
