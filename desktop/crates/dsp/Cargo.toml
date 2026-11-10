@@ -1,5 +1,5 @@
 [package]
-name = "clearmic-dsp"
+name = "sonivane-dsp"
 version.workspace = true
 edition.workspace = true
 

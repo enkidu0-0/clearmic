@@ -18,7 +18,7 @@ strip = true
 # Dev builds run the neural model, which is unusably slow unoptimized.
 [profile.dev.package."*"]
 opt-level = 3
-[profile.dev.package.clearmic-dsp]
+[profile.dev.package.sonivane-dsp]
 opt-level = 3
-[profile.dev.package.clearmic-engine]
+[profile.dev.package.sonivane-engine]
 opt-level = 3

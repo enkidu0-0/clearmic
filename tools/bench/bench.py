@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""ClearMic denoiser A/B bench.
+"""Sonivane denoiser A/B bench.
 
 Runs every clip in a folder through several denoisers, writes the results,
 scores them with DNSMOS (if available), and builds a blind listening page.
 
-    cd clearmic/spike
+    cd sonivane/spike
     .venv/bin/python ../tools/bench/bench.py ../tools/test-clips
 
 Outputs go to tools/bench/out/:
@@ -183,7 +183,7 @@ def write_blind_page(out: Path, blind, key):
             f'</select><span class="rev" data-k="{stem}/{label}"></span></div>'
             for label, rel in entries)
         cards.append(f"<section><h2>{clip}</h2>{rows}</section>")
-    html = f"""<!doctype html><meta charset="utf-8"><title>ClearMic blind test</title>
+    html = f"""<!doctype html><meta charset="utf-8"><title>Sonivane blind test</title>
 <style>
 body{{font:16px system-ui;max-width:760px;margin:2rem auto;padding:0 1rem}}
 section{{border:1px solid #8884;border-radius:10px;padding:1rem;margin:1rem 0}}

@@ -1,7 +1,7 @@
 //! Conformance check: decode an Ogg Opus file made by libopus (ffmpeg) with our decoder.
 //!   opus_check in.opus out.wav     (the file must use 10 ms frames, mono, 48 kHz)
-use clearmic_engine::codec::Decoder;
-use clearmic_protocol::FRAME_SAMPLES;
+use sonivane_engine::codec::Decoder;
+use sonivane_protocol::FRAME_SAMPLES;
 
 fn packets(data: &[u8]) -> Vec<Vec<u8>> {
     let (mut out, mut cur, mut i) = (Vec::new(), Vec::new(), 0);

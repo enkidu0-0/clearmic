@@ -1,7 +1,7 @@
-package dev.clearmic
+package dev.sonivane
 
-import dev.clearmic.engine.Packetizer
-import dev.clearmic.engine.Protocol
+import dev.sonivane.engine.Packetizer
+import dev.sonivane.engine.Protocol
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -31,7 +31,7 @@ class SenderTest {
 
     /** Sends a wav through the real Opus + encryption path to a PC receiver on 127.0.0.1:47100. */
     @Test fun send_wav_to_pc_receiver() {
-        val path = System.getenv("CLEARMIC_TEST_WAV") ?: return // only when the PC receiver is running
+        val path = System.getenv("SONIVANE_TEST_WAV") ?: return // only when the PC receiver is running
         val raw = File(path).readBytes()
         val pcm = ByteBuffer.wrap(raw, 44, raw.size - 44).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer()
         val p = Packetizer(key)

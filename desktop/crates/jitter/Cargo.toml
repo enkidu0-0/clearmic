@@ -1,4 +1,4 @@
 [package]
-name = "clearmic-jitter"
+name = "sonivane-jitter"
 version.workspace = true
 edition.workspace = true

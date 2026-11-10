@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "ClearMic",
+  "productName": "Sonivane",
   "version": "0.1.0",
-  "identifier": "dev.clearmic.app",
+  "identifier": "dev.sonivane.app",
   "build": {
     "frontendDist": "../ui"
   },

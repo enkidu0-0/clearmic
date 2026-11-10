@@ -1,6 +1,6 @@
 //! Stands in for the phone: sends a 48 kHz mono wav as encrypted packets in real time.
-//!   clearmic_sim --key <64 hex> --wav noisy.wav [--to 127.0.0.1:47100] [--loss 5] [--jitter 40]
-use clearmic_protocol::{parse_key_hex, Cipher, FLAG_RAW16, FRAME_SAMPLES};
+//!   sonivane_sim --key <64 hex> --wav noisy.wav [--to 127.0.0.1:47100] [--loss 5] [--jitter 40]
+use sonivane_protocol::{parse_key_hex, Cipher, FLAG_RAW16, FRAME_SAMPLES};
 use std::net::UdpSocket;
 use std::time::{Duration, Instant};
 

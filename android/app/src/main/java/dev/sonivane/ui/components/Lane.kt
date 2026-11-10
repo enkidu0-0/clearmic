@@ -1,4 +1,4 @@
-package dev.clearmic.ui.components
+package dev.sonivane.ui.components
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import dev.clearmic.ui.theme.Ink
+import dev.sonivane.ui.theme.Ink
 
 /**
  * A lane of level bars, newest on the right. [levels] are peak values 0..1.

@@ -1,4 +1,4 @@
 pluginManagement { repositories { google(); mavenCentral(); gradlePluginPortal() } }
 dependencyResolutionManagement { repositories { google(); mavenCentral() } }
-rootProject.name = "clearmic"
+rootProject.name = "sonivane"
 include(":app")

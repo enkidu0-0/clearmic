@@ -1,16 +1,16 @@
 [package]
-name = "clearmic-engine"
+name = "sonivane-engine"
 version.workspace = true
 edition.workspace = true
 
 [features]
-dfn3 = ["clearmic-dsp/dfn3"]
-dpdfnet = ["clearmic-dsp/dpdfnet"]
+dfn3 = ["sonivane-dsp/dfn3"]
+dpdfnet = ["sonivane-dsp/dpdfnet"]
 
 [dependencies]
-clearmic-protocol = { path = "../protocol" }
-clearmic-jitter = { path = "../jitter" }
-clearmic-dsp = { path = "../dsp" }
+sonivane-protocol = { path = "../protocol" }
+sonivane-jitter = { path = "../jitter" }
+sonivane-dsp = { path = "../dsp" }
 cpal = "0.15"
 rtrb = "0.3"
 hound = "3.5"

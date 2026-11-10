@@ -1,4 +1,4 @@
-package dev.clearmic.ui.theme
+package dev.sonivane.ui.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -64,7 +64,7 @@ private val type = Typography(
 )
 
 @Composable
-fun ClearMicTheme(content: @Composable () -> Unit) {
+fun SonivaneTheme(content: @Composable () -> Unit) {
     MaterialTheme(
         colorScheme = lightColorScheme(
             primary = Ink.Accent, onPrimary = Ink.AccentInk,

@@ -5,10 +5,10 @@ plugins {
 }
 
 android {
-    namespace = "dev.clearmic"
+    namespace = "dev.sonivane"
     compileSdk = 35
     defaultConfig {
-        applicationId = "dev.clearmic"
+        applicationId = "dev.sonivane"
         minSdk = 28  // javax ChaCha20-Poly1305 needs API 28
         targetSdk = 35
         versionCode = 1

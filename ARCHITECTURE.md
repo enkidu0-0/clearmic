@@ -1,14 +1,14 @@
-# ClearMic: plan for a WO Mic replacement with Krisp-style noise removal
+# Sonivane: plan for a WO Mic replacement with Krisp-style noise removal
 
-Working name: **ClearMic**. The phone is the microphone, the PC shows it as a normal mic
-("ClearMic Microphone") in Discord, OBS, Zoom and games, and the audio is cleaned
+Working name: **Sonivane**. The phone is the microphone, the PC shows it as a normal mic
+("Sonivane Microphone") in Discord, OBS, Zoom and games, and the audio is cleaned
 with an AI noise-removal model before it reaches those apps.
 
 ---
 
 ## 1. Why WO Mic sounds bad and what we do differently
 
-| Problem in WO Mic | What ClearMic does |
+| Problem in WO Mic | What Sonivane does |
 |---|---|
 | Sends raw phone mic audio, or uses Android's built-in `NoiseSuppressor`, which is weak and differs from phone to phone | Captures clean raw audio, then runs a **neural noise-suppression model** (DeepFilterNet3) |
 | No vocal processing, so it sounds thin and "phone-y" | Adds a **podcast voice chain**: high-pass, EQ, compressor, de-esser, limiter |
@@ -151,7 +151,7 @@ Published numbers come from the authors' own test sets.
 │               5. Compressor (3:1, -18 dB threshold, auto make-up gain)        │
 │               6. De-esser (5–8 kHz)                                           │
 │               7. Limiter (ceiling -1 dBFS)                                    │
-│           ─► WASAPI output ─► Virtual audio device ─► "ClearMic Microphone"   │
+│           ─► WASAPI output ─► Virtual audio device ─► "Sonivane Microphone"   │
 │                                                                               │
 │  Tauri UI: device list, pairing QR, A/B bypass, noise-strength slider,       │
 │  presets (Natural / Discord / Podcast), latency readout, tray icon            │
@@ -179,7 +179,7 @@ Over 150 ms, people notice the lag on calls, so for Wi-Fi gaming voice chat, off
 ## 4. Transport and protocol
 
 ### Connection modes
-1. **Wi-Fi (default)**: UDP for audio, TCP for control. Discovery with mDNS (`_clearmic._udp.local`) or a UDP broadcast.
+1. **Wi-Fi (default)**: UDP for audio, TCP for control. Discovery with mDNS (`_sonivane._udp.local`) or a UDP broadcast.
 2. **USB via ADB**: the PC runs `adb reverse tcp:47100 tcp:47100`, and the phone connects to `127.0.0.1`.
    This is what WO Mic does, and it needs USB debugging turned on. Ship `adb.exe` from platform-tools.
 3. **USB tethering (no ADB)**: turn on USB tethering and the phone becomes a network card. Then Wi-Fi mode works over the cable with about 1 ms latency.
@@ -187,7 +187,7 @@ Over 150 ms, people notice the lag on calls, so for Wi-Fi gaming voice chat, off
 4. Bluetooth: skip it. The latency and bandwidth are bad.
 
 ### Pairing and security
-- The PC shows a **QR code** containing `clearmic://<ip>:<port>?key=<32-byte base64>&name=<pc-name>`.
+- The PC shows a **QR code** containing `sonivane://<ip>:<port>?key=<32-byte base64>&name=<pc-name>`.
 - The phone scans it, and both sides use that key for **ChaCha20-Poly1305** (libsodium secretbox).
   This stops other people on café Wi-Fi from listening.
 
@@ -211,7 +211,7 @@ offset size field
 ## 5. Project structure (monorepo)
 
 ```
-clearmic/
+sonivane/
 ├── ARCHITECTURE.md                ← this file
 ├── protocol/
 │   └── PROTOCOL.md                ← packet + control spec (shared contract)
@@ -223,7 +223,7 @@ clearmic/
 │       └── src/main/
 │           ├── AndroidManifest.xml          ← RECORD_AUDIO, FOREGROUND_SERVICE_MICROPHONE,
 │           │                                   INTERNET, CAMERA (QR), POST_NOTIFICATIONS
-│           ├── java/dev/clearmic/
+│           ├── java/dev/sonivane/
 │           │   ├── MainActivity.kt
 │           │   ├── ui/                      ← Compose screens
 │           │   │   ├── HomeScreen.kt        ← big Connect/Mute button, level meter
@@ -270,10 +270,10 @@ clearmic/
 │   └── models/                    ← DeepFilterNet3 + Silero VAD weights
 │
 ├── driver/                        ← v1.0: virtual mic driver (C++, WDK)
-│   └── clearmic-vad/              ← fork of SysVAD / Virtual-Audio-Driver
+│   └── sonivane-vad/              ← fork of SysVAD / Virtual-Audio-Driver
 │
 ├── installer/
-│   └── clearmic.iss               ← Inno Setup: exe + adb + driver install
+│   └── sonivane.iss               ← Inno Setup: exe + adb + driver install
 │
 └── tools/
     ├── test-clips/                ← noisy recordings: fan, keyboard, street, kids, TV
@@ -343,7 +343,7 @@ Rule: the audio thread never allocates, locks or logs. Use `rtrb` ring buffers b
 | **1. MVP** | 2–3 weeks | Android app streams Opus over Wi-Fi UDP. Rust console exe receives it, denoises and plays into VB-Cable. Works in Discord. |
 | **2. Usable** | 2–3 weeks | Tauri UI, QR pairing, mDNS, USB mode (adb + tethering), presets, A/B bypass, tray icon, auto-reconnect. |
 | **3. Polish** | 2 weeks | Silero VAD gate, de-esser, latency stats, encryption, Inno Setup installer, auto-update. |
-| **4. Own driver** | 3–6 weeks + signing | SysVAD-based "ClearMic Microphone", EV cert, attestation signing, VB-Cable no longer needed. |
+| **4. Own driver** | 3–6 weeks + signing | SysVAD-based "Sonivane Microphone", EV cert, attestation signing, VB-Cable no longer needed. |
 | **5. Extras** | later | Studio mode (offline generative enhance), iOS app, macOS client (CoreAudio HAL plugin), multiple phones. |
 
 ---

@@ -1,9 +1,9 @@
-package dev.clearmic.engine
+package dev.sonivane.engine
 
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import dev.clearmic.service.MicStreamService
+import dev.sonivane.service.MicStreamService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,7 +23,7 @@ object EngineHolder {
     fun init(context: Context) {
         if (prefs != null) return
         appContext = context.applicationContext
-        val p = context.getSharedPreferences("clearmic", Context.MODE_PRIVATE).also { prefs = it }
+        val p = context.getSharedPreferences("sonivane", Context.MODE_PRIVATE).also { prefs = it }
         val paired = p.getString("key", null)?.let { key ->
             PairedPc(p.getString("name", "my pc")!!, p.getString("host", "")!!, p.getInt("port", 47100), key)
         }

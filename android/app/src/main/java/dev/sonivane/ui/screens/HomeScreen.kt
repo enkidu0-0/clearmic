@@ -1,4 +1,4 @@
-package dev.clearmic.ui.screens
+package dev.sonivane.ui.screens
 
 import android.Manifest
 import android.os.Build
@@ -35,22 +35,22 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import dev.clearmic.engine.Link
-import dev.clearmic.engine.MicState
-import dev.clearmic.engine.MicViewModel
-import dev.clearmic.ui.components.ChoicePill
-import dev.clearmic.ui.components.EaseOutExpo
-import dev.clearmic.ui.components.LabeledSlider
-import dev.clearmic.ui.components.Lane
-import dev.clearmic.ui.components.OutlinePill
-import dev.clearmic.ui.components.PrimaryPill
-import dev.clearmic.ui.components.Reveal
-import dev.clearmic.ui.components.StatusPill
-import dev.clearmic.ui.components.bed
-import dev.clearmic.ui.components.panel
-import dev.clearmic.ui.theme.Ink
-import dev.clearmic.ui.theme.Radius
-import dev.clearmic.ui.theme.Space
+import dev.sonivane.engine.Link
+import dev.sonivane.engine.MicState
+import dev.sonivane.engine.MicViewModel
+import dev.sonivane.ui.components.ChoicePill
+import dev.sonivane.ui.components.EaseOutExpo
+import dev.sonivane.ui.components.LabeledSlider
+import dev.sonivane.ui.components.Lane
+import dev.sonivane.ui.components.OutlinePill
+import dev.sonivane.ui.components.PrimaryPill
+import dev.sonivane.ui.components.Reveal
+import dev.sonivane.ui.components.StatusPill
+import dev.sonivane.ui.components.bed
+import dev.sonivane.ui.components.panel
+import dev.sonivane.ui.theme.Ink
+import dev.sonivane.ui.theme.Radius
+import dev.sonivane.ui.theme.Space
 import kotlin.math.roundToInt
 
 /** Which of the four looks the link has, so animations run when it changes and not on every level tick. */
@@ -81,7 +81,7 @@ fun HomeScreen(state: MicState, vm: MicViewModel, onPair: () -> Unit) {
         // top bar: wordmark and a status pill that swaps with a slide
         Reveal(0) {
             Row(Modifier.fillMaxWidth().height(56.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
-                Text("ClearMic", style = MaterialTheme.typography.titleMedium)
+                Text("Sonivane", style = MaterialTheme.typography.titleMedium)
                 AnimatedContent(
                     targetState = state.link,
                     transitionSpec = {
@@ -145,7 +145,7 @@ fun HomeScreen(state: MicState, vm: MicViewModel, onPair: () -> Unit) {
                         1 -> Spacer(Modifier.height(96.dp).fillMaxWidth().bed())
                         3 -> Text((state.link as? Link.Failed)?.reason ?: "", color = Ink.Ink2, style = MaterialTheme.typography.bodyLarge)
                         else -> Text(
-                            if (state.paired == null) "Open ClearMic on your PC, then scan the code it shows."
+                            if (state.paired == null) "Open Sonivane on your PC, then scan the code it shows."
                             else "Keep your phone close to your mouth, about a hand's width away.",
                             color = Ink.Ink2, style = MaterialTheme.typography.bodyLarge,
                         )

@@ -1,4 +1,4 @@
-package dev.clearmic.engine
+package dev.sonivane.engine
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -31,7 +31,7 @@ class AudioEngine(
 
     fun start() {
         running = true
-        thread = Thread({ run() }, "clearmic-audio").also { it.start() }
+        thread = Thread({ run() }, "sonivane-audio").also { it.start() }
     }
 
     fun stop() {

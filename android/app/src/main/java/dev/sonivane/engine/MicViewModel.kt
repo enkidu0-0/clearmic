@@ -1,10 +1,10 @@
-package dev.clearmic.engine
+package dev.sonivane.engine
 
 import android.app.Application
 import android.content.Intent
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
-import dev.clearmic.service.MicStreamService
+import dev.sonivane.service.MicStreamService
 
 class MicViewModel(app: Application) : AndroidViewModel(app) {
     val state = EngineHolder.state

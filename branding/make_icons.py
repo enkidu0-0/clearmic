@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Draws the ClearMic mark and writes every icon the apps need.
+"""Draws the Sonivane mark and writes every icon the apps need.
 
 A microphone whose capsule holds a clean waveform: flat deep teal, warm paper white. The proportions are measured from
 the approved ChatGPT artwork, redrawn as vectors so every size is crisp.

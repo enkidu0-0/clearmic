@@ -9,7 +9,7 @@ Aim for 8-10 clips of 10-30 s: fan, keyboard, street, TV, kids, echoey room, qui
 `fan_keyboard_synthetic.wav` is only a smoke test; delete it for the real test.
 
 ```bash
-cd clearmic/spike
+cd sonivane/spike
 .venv/bin/python ../tools/bench/bench.py ../tools/test-clips
 open ../tools/bench/out/blind.html
 ```

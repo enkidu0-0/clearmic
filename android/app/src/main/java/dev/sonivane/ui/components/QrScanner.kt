@@ -1,4 +1,4 @@
-package dev.clearmic.ui.components
+package dev.sonivane.ui.components
 
 import android.annotation.SuppressLint
 import androidx.camera.core.CameraSelector

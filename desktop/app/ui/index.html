@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ClearMic, your phone as a clean microphone</title>
+<title>Sonivane, your phone as a clean microphone</title>
 <meta name="description" content="Use your phone as a PC microphone with AI noise removal and a podcast voice chain.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500&family=Figtree:wght@400;500&display=swap" rel="stylesheet">
@@ -14,7 +14,7 @@
 
 <header class="bar">
   <div class="bar__in container">
-    <a class="brand" href="#live" aria-label="ClearMic home"><svg class="brand__mark" viewBox="0 0 1024 1024" aria-hidden="true"><rect width="1024" height="1024" rx="220" fill="#146B67"/><g fill="#FBF9F4"><rect x="359" y="155" width="306" height="520" rx="153"/><path d="M298.5 519A213.5 213.5 0 0 0 725.5 519" fill="none" stroke="#FBF9F4" stroke-width="56" stroke-linecap="round"/><rect x="483" y="732" width="58" height="118"/><rect x="382" y="822" width="260" height="56" rx="28"/></g><g fill="#146B67"><rect x="408" y="379" width="44" height="130" rx="22"/><rect x="490" y="306" width="44" height="252" rx="22"/><rect x="572" y="379" width="44" height="130" rx="22"/></g></svg><span>ClearMic</span></a>
+    <a class="brand" href="#live" aria-label="Sonivane home"><svg class="brand__mark" viewBox="0 0 1024 1024" aria-hidden="true"><rect width="1024" height="1024" rx="220" fill="#146B67"/><g fill="#FBF9F4"><rect x="359" y="155" width="306" height="520" rx="153"/><path d="M298.5 519A213.5 213.5 0 0 0 725.5 519" fill="none" stroke="#FBF9F4" stroke-width="56" stroke-linecap="round"/><rect x="483" y="732" width="58" height="118"/><rect x="382" y="822" width="260" height="56" rx="28"/></g><g fill="#146B67"><rect x="408" y="379" width="44" height="130" rx="22"/><rect x="490" y="306" width="44" height="252" rx="22"/><rect x="572" y="379" width="44" height="130" rx="22"/></g></svg><span>Sonivane</span></a>
 
     <nav class="tabs" role="tablist" aria-label="Sections">
       <button class="tab" role="tab" id="tab-live" data-view="live" aria-controls="view-live" aria-selected="true" type="button">Live</button>
@@ -62,7 +62,7 @@
 
         <div class="waiting" data-when="waiting">
           <h2>Waiting for a phone</h2>
-          <p>Open ClearMic on your phone and scan the pairing code.</p>
+          <p>Open Sonivane on your phone and scan the pairing code.</p>
           <button class="key key--primary" type="button" id="btn-show-pair">Show pairing code</button>
         </div>
 
@@ -100,7 +100,7 @@
             <label class="seg__opt"><input type="radio" name="performance" value="off"><span class="seg__pill">Off</span></label>
           </fieldset>
           <p class="help muted" id="perf-help">Lightest on the CPU. Best while you game.</p>
-          <p class="help note" id="perf-note" hidden>Your PC was busy, so ClearMic switched to a lighter noise remover.</p>
+          <p class="help note" id="perf-note" hidden>Your PC was busy, so Sonivane switched to a lighter noise remover.</p>
         </div>
       </section>
     </div>
@@ -142,7 +142,7 @@
       <div class="pair__text">
         <h2 id="pair-h">Pair your phone</h2>
         <ol class="pair__steps">
-          <li>Open ClearMic on your phone</li>
+          <li>Open Sonivane on your phone</li>
           <li>Tap scan, then point it at this code</li>
           <li>In Discord, pick <b>CABLE Output</b> as your microphone</li>
         </ol>
@@ -162,7 +162,7 @@
           <select id="out-dev" name="output" class="select" aria-label="Output device">
             <option value="">Looking for devices</option>
           </select>
-          <p class="help muted">In Discord, pick the matching recording device (on Windows it is called <b>CABLE Output</b>). To show it as <b>ClearMic</b> there, rename it in Windows Sound settings.</p>
+          <p class="help muted">In Discord, pick the matching recording device (on Windows it is called <b>CABLE Output</b>). To show it as <b>Sonivane</b> there, rename it in Windows Sound settings.</p>
           <p class="help note" id="out-note" hidden></p>
         </div>
         <ul class="chain">
@@ -176,7 +176,7 @@
         <ul class="chain">
           <li id="boot-row"><label for="c-boot">Start with Windows</label><input class="switch" role="switch" type="checkbox" id="c-boot" name="autostart"></li>
         </ul>
-        <p class="help muted">Closing the window keeps ClearMic running in the tray. With the window closed it uses very little memory, and while no phone is connected it uses almost no CPU.</p>
+        <p class="help muted">Closing the window keeps Sonivane running in the tray. With the window closed it uses very little memory, and while no phone is connected it uses almost no CPU.</p>
         <button class="key" type="button" id="btn-hide">Close window, keep running</button>
       </section>
     </div>

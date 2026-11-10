@@ -1,4 +1,4 @@
-package dev.clearmic.ui.screens
+package dev.sonivane.ui.screens
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -35,17 +35,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import dev.clearmic.engine.PairedPc
-import dev.clearmic.engine.Protocol
-import dev.clearmic.ui.components.OutlinePill
-import dev.clearmic.ui.components.PrimaryPill
-import dev.clearmic.ui.components.QrScanner
-import dev.clearmic.ui.components.Reveal
-import dev.clearmic.ui.theme.Ink
-import dev.clearmic.ui.theme.Radius
-import dev.clearmic.ui.theme.Space
+import dev.sonivane.engine.PairedPc
+import dev.sonivane.engine.Protocol
+import dev.sonivane.ui.components.OutlinePill
+import dev.sonivane.ui.components.PrimaryPill
+import dev.sonivane.ui.components.QrScanner
+import dev.sonivane.ui.components.Reveal
+import dev.sonivane.ui.theme.Ink
+import dev.sonivane.ui.theme.Radius
+import dev.sonivane.ui.theme.Space
 
-/** Scan the code on the PC screen (clearmic://host:port?key=...). Typing it is the fallback. */
+/** Scan the code on the PC screen (sonivane://host:port?key=...). Typing it is the fallback. */
 @Composable
 fun PairScreen(onPaired: (PairedPc) -> Unit) {
     val context = LocalContext.current
@@ -82,7 +82,7 @@ fun PairScreen(onPaired: (PairedPc) -> Unit) {
                     onCode = { text ->
                         if (!done) {
                             val pc = PairedPc.parse(text)
-                            if (pc != null) { done = true; onPaired(pc) } else scanError = "That is not a ClearMic code"
+                            if (pc != null) { done = true; onPaired(pc) } else scanError = "That is not a Sonivane code"
                         }
                     },
                     modifier = Modifier.fillMaxSize(),

@@ -1,4 +1,4 @@
-package dev.clearmic.engine
+package dev.sonivane.engine
 
 import io.github.jaredmdobson.concentus.OpusApplication
 import io.github.jaredmdobson.concentus.OpusEncoder

@@ -1,8 +1,8 @@
 //! App state: the config on disk, the running engine, and everything the UI asks for.
 
 use crate::{Levels, Pairing, Params, Status};
-use clearmic_dsp::{ChainConfig, Preset};
-use clearmic_engine::{CpalSink, DenoiseKind, Engine, EngineConfig, MonitorGate, MonitorSink, NullSink, Sink, TeeSink, WavSink};
+use sonivane_dsp::{ChainConfig, Preset};
+use sonivane_engine::{CpalSink, DenoiseKind, Engine, EngineConfig, MonitorGate, MonitorSink, NullSink, Sink, TeeSink, WavSink};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::net::UdpSocket;
@@ -179,7 +179,7 @@ impl Shared {
 
         let mut notice: Option<String> = None;
         let result = (|| -> Result<Engine, String> {
-            let key = clearmic_protocol::parse_key_hex(&cfg.key_hex).ok_or("the pairing key is damaged, pair again")?;
+            let key = sonivane_protocol::parse_key_hex(&cfg.key_hex).ok_or("the pairing key is damaged, pair again")?;
             // The receiver must always listen, or the phone gets "connection refused". With no virtual cable the sound
             // goes nowhere, and the window says so.
             let mut speakers_refused = false;
@@ -188,7 +188,7 @@ impl Shared {
                 speakers_refused = !ok;
                 ok
             });
-            let wanted = saved.or_else(|| std::env::var("CLEARMIC_OUTPUT").ok()).or_else(Self::default_output);
+            let wanted = saved.or_else(|| std::env::var("SONIVANE_OUTPUT").ok()).or_else(Self::default_output);
             let (mut sink, mut note): (Box<dyn Sink>, Option<String>) = match wanted {
                 Some(o) if o.starts_with("wav:") => match WavSink::create(&o[4..]) {
                     Ok(w) => (Box::new(w), None),
@@ -201,12 +201,12 @@ impl Shared {
                 None => (Box::new(NullSink), Some("no virtual microphone cable found".to_string())),
             };
             if let Some(why) = &note {
-                note = Some(format!("{why}, so other apps cannot hear ClearMic yet. Install a virtual cable (VB-Cable on Windows, BlackHole on Mac) and pick it under Output."));
+                note = Some(format!("{why}, so other apps cannot hear Sonivane yet. Install a virtual cable (VB-Cable on Windows, BlackHole on Mac) and pick it under Output."));
             }
             // the speakers are always wired in, but silent until the switch is on or the compare button is held
             sink = Box::new(TeeSink(vec![sink, Box::new(MonitorSink::new(self.monitor.clone()))]));
             if speakers_refused && note.is_some() {
-                note = Some("A real speaker was selected as the output, which would play your voice out loud. ClearMic ignored it. Pick a virtual cable (VB-Cable on Windows, BlackHole on Mac) under Output. Use \"Hear my voice\" to listen to yourself.".to_string());
+                note = Some("A real speaker was selected as the output, which would play your voice out loud. Sonivane ignored it. Pick a virtual cable (VB-Cable on Windows, BlackHole on Mac) under Output. Use \"Hear my voice\" to listen to yourself.".to_string());
             }
             notice = note;
             let (denoise, fallbacks) = self.denoise_ladder(&cfg.performance)?;
@@ -260,7 +260,7 @@ impl Shared {
                     None if s.rejected > 0 => ("error", Some(format!("the phone is sending, but its pairing code does not match this PC ({} packets refused). Scan the code on the Phone tab again.", s.rejected))),
                     None => ("waiting", None),
                     Some(a) if a < 1500 => ("connected", None),
-                    Some(_) => ("error", Some(format!("the phone stopped sending after {} packets. Keep the phone screen on, set ClearMic's battery use to unrestricted, and check the Wi-Fi.", s.received))),
+                    Some(_) => ("error", Some(format!("the phone stopped sending after {} packets. Keep the phone screen on, set Sonivane's battery use to unrestricted, and check the Wi-Fi.", s.received))),
                 };
                 Status {
                     state,
@@ -293,7 +293,7 @@ impl Shared {
     pub fn pairing(&self) -> Result<Pairing, String> {
         let i = self.inner.lock().unwrap();
         let addr = format!("{}:{}", self.cached_ip(), i.cfg.port);
-        let uri = format!("clearmic://{addr}?key={}&name={}", i.cfg.key_hex, computer_name());
+        let uri = format!("sonivane://{addr}?key={}&name={}", i.cfg.key_hex, computer_name());
         let svg = qrcode::QrCode::new(uri.as_bytes())
             .map_err(|e| e.to_string())?
             .render::<qrcode::render::svg::Color>()
@@ -400,7 +400,7 @@ mod tests {
     }
 
     use super::*;
-    use clearmic_protocol::{Cipher, FLAG_RAW16, FRAME_SAMPLES};
+    use sonivane_protocol::{Cipher, FLAG_RAW16, FRAME_SAMPLES};
     use std::time::{Duration, Instant};
 
     fn send(sock: &UdpSocket, cipher: &Cipher, from: u32, count: u32) {
@@ -421,18 +421,18 @@ mod tests {
 
     #[test]
     fn app_state_end_to_end() {
-        let dir = std::env::temp_dir().join(format!("clearmic-test-{}", std::process::id()));
+        let dir = std::env::temp_dir().join(format!("sonivane-test-{}", std::process::id()));
         let wav = dir.join("out.wav");
         std::fs::create_dir_all(&dir).unwrap();
-        std::env::set_var("CLEARMIC_OUTPUT", format!("wav:{}", wav.display()));
+        std::env::set_var("SONIVANE_OUTPUT", format!("wav:{}", wav.display()));
         let shared = Shared::load(dir.clone(), None);
         shared.restart().expect("engine starts");
 
         // pairing: uri carries the address and the key, and the qr is an svg
         let p = shared.pairing().unwrap();
-        assert!(p.uri.starts_with("clearmic://") && p.uri.contains(&format!("key={}", p.key)));
+        assert!(p.uri.starts_with("sonivane://") && p.uri.contains(&format!("key={}", p.key)));
         assert!(p.qr_svg.contains("<svg"));
-        let key = clearmic_protocol::parse_key_hex(&p.key).unwrap();
+        let key = sonivane_protocol::parse_key_hex(&p.key).unwrap();
         assert_eq!(shared.status().state, "waiting");
 
         // a phone sends: status turns connected, delay and levels appear
@@ -488,7 +488,7 @@ mod tests {
         assert!(shared.status().idle, "with no phone the receiver sleeps");
 
         // the new key works, and the receiver wakes up again
-        let cipher2 = Cipher::new(&clearmic_protocol::parse_key_hex(&p2.key).unwrap());
+        let cipher2 = Cipher::new(&sonivane_protocol::parse_key_hex(&p2.key).unwrap());
         send(&sock, &cipher2, 30_000, 40);
         assert_eq!(shared.status().state, "connected");
         assert!(!shared.status().idle);

@@ -1,8 +1,8 @@
 //! Console receiver. Example (writes a wav; add --device "cable" to play into a device):
-//!   clearmic_rx --key <64 hex> --wav out.wav --seconds 15 --denoise dfn3 --preset discord
-use clearmic_dsp::{ChainConfig, Preset};
-use clearmic_engine::{CpalSink, DenoiseKind, Engine, EngineConfig, Sink, WavSink};
-use clearmic_protocol::parse_key_hex;
+//!   sonivane_rx --key <64 hex> --wav out.wav --seconds 15 --denoise dfn3 --preset discord
+use sonivane_dsp::{ChainConfig, Preset};
+use sonivane_engine::{CpalSink, DenoiseKind, Engine, EngineConfig, Sink, WavSink};
+use sonivane_protocol::parse_key_hex;
 use std::time::{Duration, Instant};
 
 fn arg(args: &[String], name: &str) -> Option<String> {

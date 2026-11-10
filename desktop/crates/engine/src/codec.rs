@@ -1,4 +1,4 @@
-use clearmic_protocol::{FLAG_RAW16, FRAME_SAMPLES};
+use sonivane_protocol::{FLAG_RAW16, FRAME_SAMPLES};
 use opus_decoder::OpusDecoder;
 
 /// Turns packet payloads into 480-sample frames, and conceals lost packets.

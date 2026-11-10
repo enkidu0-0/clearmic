@@ -125,14 +125,14 @@ fn show_window(app: &AppHandle) {
         return;
     }
     let _ = WebviewWindowBuilder::new(app, "main", WebviewUrl::App("index.html".into()))
-        .title("ClearMic")
+        .title("Sonivane")
         .inner_size(1180.0, 780.0)
         .min_inner_size(900.0, 640.0)
         .build();
 }
 
 fn main() {
-    clearmic_engine::os::raise_process_priority();
+    sonivane_engine::os::raise_process_priority();
 
     let app = tauri::Builder::default()
         // a second launch just brings the first one forward
@@ -147,13 +147,13 @@ fn main() {
             app.manage(shared);
 
             // tray: the app lives here when the window is closed
-            let open = MenuItem::with_id(app, "open", "Open ClearMic", true, None::<&str>)?;
+            let open = MenuItem::with_id(app, "open", "Open Sonivane", true, None::<&str>)?;
             let boot = CheckMenuItem::with_id(app, "boot", "Start with Windows", autostart::SUPPORTED, autostart::is_enabled(), None::<&str>)?;
             let quit = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
             let menu = Menu::with_items(app, &[&open, &boot, &PredefinedMenuItem::separator(app)?, &quit])?;
             let boot_item = boot.clone();
             let mut tray = TrayIconBuilder::with_id("tray")
-                .tooltip("ClearMic")
+                .tooltip("Sonivane")
                 .menu(&menu)
                 .show_menu_on_left_click(false)
                 .on_menu_event(move |app, event| match event.id().as_ref() {
@@ -191,9 +191,9 @@ fn main() {
                     std::thread::sleep(std::time::Duration::from_secs(3));
                     let st = handle.state::<Shared>().status();
                     let text = match st.state {
-                        "connected" => "ClearMic: phone connected",
-                        "waiting" => "ClearMic: waiting for a phone",
-                        _ => "ClearMic: not connected",
+                        "connected" => "Sonivane: phone connected",
+                        "waiting" => "Sonivane: waiting for a phone",
+                        _ => "Sonivane: not connected",
                     };
                     if text != last {
                         if let Some(t) = handle.tray_by_id("tray") {
@@ -208,8 +208,8 @@ fn main() {
             if !std::env::args().any(|a| a == "--minimized") {
                 show_window(app.handle());
             }
-            // test hook: CLEARMIC_AUTOCLOSE_MS=<n> closes the window after n ms, as the close button does
-            if let Some(ms) = std::env::var("CLEARMIC_AUTOCLOSE_MS").ok().and_then(|v| v.parse::<u64>().ok()) {
+            // test hook: SONIVANE_AUTOCLOSE_MS=<n> closes the window after n ms, as the close button does
+            if let Some(ms) = std::env::var("SONIVANE_AUTOCLOSE_MS").ok().and_then(|v| v.parse::<u64>().ok()) {
                 let h = app.handle().clone();
                 std::thread::spawn(move || {
                     std::thread::sleep(std::time::Duration::from_millis(ms));
@@ -222,7 +222,7 @@ fn main() {
             get_status, get_levels, get_pairing, get_params, set_param, set_bypass, reconnect, pair, hide_to_tray
         ])
         .build(tauri::generate_context!())
-        .expect("error while building ClearMic");
+        .expect("error while building Sonivane");
 
     app.run(|app, event| match event {
         // closing the last window must not end the app; only Quit in the tray does

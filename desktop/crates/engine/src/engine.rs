@@ -1,8 +1,8 @@
 use crate::codec::Decoder;
 use crate::sink::Sink;
-use clearmic_dsp::{Chain, ChainConfig, Denoiser, Passthrough, Preset};
-use clearmic_jitter::{JitterBuffer, Slot};
-use clearmic_protocol::{Cipher, FRAME_SAMPLES};
+use sonivane_dsp::{Chain, ChainConfig, Denoiser, Passthrough, Preset};
+use sonivane_jitter::{JitterBuffer, Slot};
+use sonivane_protocol::{Cipher, FRAME_SAMPLES};
 use std::io;
 use std::net::{SocketAddr, UdpSocket};
 use std::sync::atomic::{AtomicBool, AtomicU32, AtomicU64, AtomicU8, Ordering::Relaxed};
@@ -94,7 +94,7 @@ fn make_denoiser(kind: DenoiseKind) -> Box<dyn Denoiser> {
     match kind {
         DenoiseKind::None => Box::new(Passthrough),
         #[cfg(feature = "dpdfnet")]
-        DenoiseKind::Dpdfnet(path) => match clearmic_dsp::denoise::DpdfNet::from_file(&path) {
+        DenoiseKind::Dpdfnet(path) => match sonivane_dsp::denoise::DpdfNet::from_file(&path) {
             Ok(d) => Box::new(d),
             Err(e) => {
                 eprintln!("DPDFNet failed to load ({e}); running without noise removal");
@@ -107,7 +107,7 @@ fn make_denoiser(kind: DenoiseKind) -> Box<dyn Denoiser> {
             Box::new(Passthrough)
         }
         #[cfg(feature = "dfn3")]
-        DenoiseKind::Dfn3 => match clearmic_dsp::denoise::DeepFilter::new() {
+        DenoiseKind::Dfn3 => match sonivane_dsp::denoise::DeepFilter::new() {
             Ok(d) => Box::new(d),
             Err(e) => {
                 eprintln!("DeepFilterNet3 failed to load ({e}); running without noise removal");

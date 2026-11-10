@@ -613,62 +613,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "clearmic-app"
-version = "0.1.0"
-dependencies = [
- "clearmic-dsp",
- "clearmic-engine",
- "clearmic-protocol",
- "getrandom 0.2.17",
- "hound",
- "qrcode",
- "serde",
- "serde_json",
- "tauri",
- "tauri-build",
- "tauri-plugin-single-instance",
- "winreg 0.52.0",
-]
-
-[[package]]
-name = "clearmic-dsp"
-version = "0.1.0"
-dependencies = [
- "deep_filter",
- "ndarray",
- "realfft",
- "tract-core",
- "tract-hir",
- "tract-onnx",
- "tract-pulse",
-]
-
-[[package]]
-name = "clearmic-engine"
-version = "0.1.0"
-dependencies = [
- "clearmic-dsp",
- "clearmic-jitter",
- "clearmic-protocol",
- "cpal",
- "hound",
- "opus-decoder",
- "rtrb",
- "windows-sys 0.59.0",
-]
-
-[[package]]
-name = "clearmic-jitter"
-version = "0.1.0"
-
-[[package]]
-name = "clearmic-protocol"
-version = "0.1.0"
-dependencies = [
- "chacha20poly1305",
-]
-
-[[package]]
 name = "combine"
 version = "4.6.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4065,6 +4009,62 @@ dependencies = [
  "wasm-bindgen",
  "web-sys",
  "windows-sys 0.61.2",
+]
+
+[[package]]
+name = "sonivane-app"
+version = "0.1.0"
+dependencies = [
+ "getrandom 0.2.17",
+ "hound",
+ "qrcode",
+ "serde",
+ "serde_json",
+ "sonivane-dsp",
+ "sonivane-engine",
+ "sonivane-protocol",
+ "tauri",
+ "tauri-build",
+ "tauri-plugin-single-instance",
+ "winreg 0.52.0",
+]
+
+[[package]]
+name = "sonivane-dsp"
+version = "0.1.0"
+dependencies = [
+ "deep_filter",
+ "ndarray",
+ "realfft",
+ "tract-core",
+ "tract-hir",
+ "tract-onnx",
+ "tract-pulse",
+]
+
+[[package]]
+name = "sonivane-engine"
+version = "0.1.0"
+dependencies = [
+ "cpal",
+ "hound",
+ "opus-decoder",
+ "rtrb",
+ "sonivane-dsp",
+ "sonivane-jitter",
+ "sonivane-protocol",
+ "windows-sys 0.59.0",
+]
+
+[[package]]
+name = "sonivane-jitter"
+version = "0.1.0"
+
+[[package]]
+name = "sonivane-protocol"
+version = "0.1.0"
+dependencies = [
+ "chacha20poly1305",
 ]
 
 [[package]]

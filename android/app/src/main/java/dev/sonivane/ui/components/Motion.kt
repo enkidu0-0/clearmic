@@ -1,4 +1,4 @@
-package dev.clearmic.ui.components
+package dev.sonivane.ui.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.CubicBezierEasing
@@ -39,9 +39,9 @@ import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.animation.animateColorAsState
-import dev.clearmic.ui.theme.Ink
-import dev.clearmic.ui.theme.Radius
-import dev.clearmic.ui.theme.Space
+import dev.sonivane.ui.theme.Ink
+import dev.sonivane.ui.theme.Radius
+import dev.sonivane.ui.theme.Space
 import kotlinx.coroutines.delay
 
 /** The one easing the whole app uses: quick start, long soft landing (same curve as the PC app). */

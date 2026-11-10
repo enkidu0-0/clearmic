@@ -6,7 +6,7 @@ mod imp {
     use winreg::RegKey;
 
     const KEY: &str = r"Software\Microsoft\Windows\CurrentVersion\Run";
-    const NAME: &str = "ClearMic";
+    const NAME: &str = "Sonivane";
 
     pub const SUPPORTED: bool = true;
 

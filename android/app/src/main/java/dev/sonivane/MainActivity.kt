@@ -1,4 +1,4 @@
-package dev.clearmic
+package dev.sonivane
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -26,15 +26,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import dev.clearmic.engine.EngineHolder
-import dev.clearmic.engine.MicViewModel
-import dev.clearmic.ui.components.EaseOutExpo
-import dev.clearmic.ui.components.NavBar
-import dev.clearmic.ui.screens.HomeScreen
-import dev.clearmic.ui.screens.PairScreen
-import dev.clearmic.ui.screens.SettingsScreen
-import dev.clearmic.ui.theme.ClearMicTheme
-import dev.clearmic.ui.theme.Ink
+import dev.sonivane.engine.EngineHolder
+import dev.sonivane.engine.MicViewModel
+import dev.sonivane.ui.components.EaseOutExpo
+import dev.sonivane.ui.components.NavBar
+import dev.sonivane.ui.screens.HomeScreen
+import dev.sonivane.ui.screens.PairScreen
+import dev.sonivane.ui.screens.SettingsScreen
+import dev.sonivane.ui.theme.SonivaneTheme
+import dev.sonivane.ui.theme.Ink
 
 private val routes = listOf("home", "pair", "settings")
 private val labels = listOf("Live", "Phone", "Settings")
@@ -48,7 +48,7 @@ class MainActivity : ComponentActivity() {
         )
         EngineHolder.init(this)
         setContent {
-            ClearMicTheme {
+            SonivaneTheme {
                 val nav = rememberNavController()
                 val vm: MicViewModel = viewModel()
                 val state by vm.state.collectAsStateWithLifecycle()

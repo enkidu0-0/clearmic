@@ -1,8 +1,8 @@
 [package]
-name = "clearmic-app"
+name = "sonivane-app"
 version.workspace = true
 edition.workspace = true
-description = "ClearMic: use your phone as a PC microphone with AI noise removal"
+description = "Sonivane: use your phone as a PC microphone with AI noise removal"
 
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
@@ -14,9 +14,9 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 qrcode = { version = "0.14", default-features = false, features = ["svg"] }
 getrandom = "0.2"
-clearmic-engine = { path = "../../crates/engine", features = ["dpdfnet"] }
-clearmic-dsp = { path = "../../crates/dsp" }
-clearmic-protocol = { path = "../../crates/protocol" }
+sonivane-engine = { path = "../../crates/engine", features = ["dpdfnet"] }
+sonivane-dsp = { path = "../../crates/dsp" }
+sonivane-protocol = { path = "../../crates/protocol" }
 
 [dev-dependencies]
 hound = "3.5"

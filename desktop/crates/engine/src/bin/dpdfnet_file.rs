@@ -2,7 +2,7 @@
 //!   dpdfnet_file model.onnx in.wav out.wav [strength 0..1]
 #[cfg(feature = "dpdfnet")]
 fn main() {
-    use clearmic_dsp::{denoise::DpdfNet, Denoiser};
+    use sonivane_dsp::{denoise::DpdfNet, Denoiser};
     let a: Vec<String> = std::env::args().collect();
     let mut rd = hound::WavReader::open(&a[2]).unwrap();
     let m = (1i64 << (rd.spec().bits_per_sample - 1)) as f32;

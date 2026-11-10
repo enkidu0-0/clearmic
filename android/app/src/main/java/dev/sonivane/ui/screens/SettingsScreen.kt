@@ -1,4 +1,4 @@
-package dev.clearmic.ui.screens
+package dev.sonivane.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -17,14 +17,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import dev.clearmic.engine.MicState
-import dev.clearmic.engine.MicViewModel
-import dev.clearmic.ui.components.ChoicePill
-import dev.clearmic.ui.components.Reveal
-import dev.clearmic.ui.components.panel
-import dev.clearmic.ui.theme.Ink
-import dev.clearmic.ui.theme.Radius
-import dev.clearmic.ui.theme.Space
+import dev.sonivane.engine.MicState
+import dev.sonivane.engine.MicViewModel
+import dev.sonivane.ui.components.ChoicePill
+import dev.sonivane.ui.components.Reveal
+import dev.sonivane.ui.components.panel
+import dev.sonivane.ui.theme.Ink
+import dev.sonivane.ui.theme.Radius
+import dev.sonivane.ui.theme.Space
 
 @Composable
 fun SettingsScreen(state: MicState, vm: MicViewModel) {
@@ -49,7 +49,7 @@ fun SettingsScreen(state: MicState, vm: MicViewModel) {
 
         Reveal(2) { Section("Keep it running") {
             Text(
-                "ClearMic keeps a notification while it is sending so Android does not stop it. On Xiaomi, Oppo and Vivo phones, also allow it to run in the background in battery settings.",
+                "Sonivane keeps a notification while it is sending so Android does not stop it. On Xiaomi, Oppo and Vivo phones, also allow it to run in the background in battery settings.",
                 color = Ink.Ink2, style = MaterialTheme.typography.bodyLarge,
             )
         } }

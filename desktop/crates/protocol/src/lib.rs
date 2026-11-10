@@ -1,4 +1,4 @@
-//! ClearMic wire format (see ARCHITECTURE.md section 4).
+//! Sonivane wire format (see ARCHITECTURE.md section 4).
 //!
 //! Datagram = 18-byte header + ChaCha20-Poly1305 ciphertext (payload + 16-byte tag).
 //! The header is authenticated as associated data; the nonce is `seq | ts_us`, so it

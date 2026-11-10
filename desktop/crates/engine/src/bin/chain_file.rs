@@ -3,7 +3,7 @@
 //! Prints the loudness of the louder half of the frames, which is where the voice is.
 #[cfg(feature = "dpdfnet")]
 fn main() {
-    use clearmic_dsp::{denoise::DpdfNet, Chain, ChainConfig, Preset};
+    use sonivane_dsp::{denoise::DpdfNet, Chain, ChainConfig, Preset};
     let a: Vec<String> = std::env::args().collect();
     let mut rd = hound::WavReader::open(&a[2]).unwrap();
     let m = (1i64 << (rd.spec().bits_per_sample - 1)) as f32;

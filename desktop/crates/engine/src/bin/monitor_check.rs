@@ -1,10 +1,10 @@
 //! Plays a 2 second beep through the same speaker path the app uses for "Hear my voice".
-use clearmic_engine::{MonitorGate, MonitorSink, Sink};
+use sonivane_engine::{MonitorGate, MonitorSink, Sink};
 use std::sync::{atomic::Ordering::Relaxed, Arc};
 use std::time::{Duration, Instant};
 
 fn main() {
-    println!("outputs: {:?}", clearmic_engine::CpalSink::list_outputs());
+    println!("outputs: {:?}", sonivane_engine::CpalSink::list_outputs());
     let gate = Arc::new(MonitorGate::default());
     gate.switch.store(true, Relaxed);
     let mut sink = MonitorSink::new(gate);

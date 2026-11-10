@@ -1,4 +1,4 @@
-package dev.clearmic.engine
+package dev.sonivane.engine
 
 /** What the UI shows. */
 sealed interface Link {

@@ -1,4 +1,4 @@
-package dev.clearmic.ui.components
+package dev.sonivane.ui.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -35,9 +35,9 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.unit.dp
-import dev.clearmic.ui.theme.Ink
-import dev.clearmic.ui.theme.Radius
-import dev.clearmic.ui.theme.Space
+import dev.sonivane.ui.theme.Ink
+import dev.sonivane.ui.theme.Radius
+import dev.sonivane.ui.theme.Space
 
 private val pill = RoundedCornerShape(Radius.Pill)
 private val keyBrush = Brush.verticalGradient(listOf(Color.White, Ink.Paper))

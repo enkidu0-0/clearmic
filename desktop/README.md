@@ -1,4 +1,4 @@
-# ClearMic for PC
+# Sonivane for PC
 
 Receives your phone's microphone over Wi-Fi, removes noise with DPDFNet, and plays the result into a
 virtual microphone cable that Discord, OBS, Zoom and games can pick as a mic.
@@ -6,13 +6,13 @@ virtual microphone cable that Discord, OBS, Zoom and games can pick as a mic.
 ## Use it (Windows)
 
 1. Install **VB-Audio Virtual Cable** (vb-audio.com/Cable, free for personal use) and restart.
-2. Run the ClearMic installer, open the app. It finds "CABLE Input" by itself.
-3. On your phone, open the ClearMic app, tap *scan pc code* and scan the code in the ClearMic window.
+2. Run the Sonivane installer, open the app. It finds "CABLE Input" by itself.
+3. On your phone, open the Sonivane app, tap *scan pc code* and scan the code in the Sonivane window.
 4. In Discord (or OBS, Zoom...) choose **CABLE Output** as your microphone.
 
 ## Runs in the background
 
-- Closing the window does not quit: ClearMic keeps receiving from the tray icon (left-click to open, right-click for the menu).
+- Closing the window does not quit: Sonivane keeps receiving from the tray icon (left-click to open, right-click for the menu).
   The window's web view is destroyed on close, which is what gives its memory back.
 - Output tab, Background: **Start with Windows** (starts hidden in the tray with `--minimized`).
 - A second launch just brings the running one forward.
@@ -42,8 +42,8 @@ cd desktop/app/src-tauri
 cargo tauri build          # installer in desktop/target/release/bundle/nsis/
 ```
 
-On a Mac or Linux you can run the same app for testing: `cargo run --release -p clearmic-app`
-(set `CLEARMIC_OUTPUT=wav:/some/file.wav` to record the output to a file instead of a device).
+On a Mac or Linux you can run the same app for testing: `cargo run --release -p sonivane-app`
+(set `SONIVANE_OUTPUT=wav:/some/file.wav` to record the output to a file instead of a device).
 
 ## Layout
 
