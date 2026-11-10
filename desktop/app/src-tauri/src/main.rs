@@ -132,7 +132,7 @@ fn show_window(app: &AppHandle) {
 }
 
 fn main() {
-    clearmic_engine::os::lower_process_priority();
+    clearmic_engine::os::raise_process_priority();
 
     let app = tauri::Builder::default()
         // a second launch just brings the first one forward

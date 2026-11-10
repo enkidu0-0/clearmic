@@ -198,6 +198,10 @@ impl Engine {
                 let mut nr = 0f32;
                 let mut load = 0f32; // smoothed processing time in ms
                 let mut overloaded_ticks = 0u32;
+                // After a fall-back, try the better model again once the machine has been calm for a while. Each failed
+                // attempt doubles the wait, so a game that stays heavy does not make the voice flip back and forth.
+                let mut calm_ticks = 0u32;
+                let mut retry_after = 3_000u32; // 30 s
                 let mut applied_preset = preset_id(cfg.preset);
                 let period = Duration::from_millis(10);
                 let mut next = Instant::now();
@@ -278,8 +282,21 @@ impl Engine {
                         chain.set_denoiser(make_denoiser(ladder[rung].clone()));
                         shared.fell_back.store(rung as u32, Relaxed);
                         overloaded_ticks = 0;
+                        calm_ticks = 0;
                         load = 0.0;
                         next = Instant::now();
+                    } else if rung > 0 {
+                        calm_ticks = if load < 4.0 { calm_ticks + 1 } else { 0 };
+                        if calm_ticks > retry_after {
+                            rung -= 1;
+                            chain.set_denoiser(make_denoiser(ladder[rung].clone()));
+                            shared.fell_back.store(rung as u32, Relaxed);
+                            retry_after = (retry_after * 2).min(36_000);
+                            calm_ticks = 0;
+                            overloaded_ticks = 0;
+                            load = 0.0;
+                            next = Instant::now();
+                        }
                     }
 
                     shared.played.fetch_add(1, Relaxed);

@@ -12,12 +12,24 @@ pub fn boost_audio_thread() {
     }
 }
 
-/// Windows: run the rest of the app (window, settings) behind the game.
+/// Windows: the microphone must never wait behind a game. Above-normal priority, and no power throttling: Windows 11
+/// otherwise slows (or sleeps the timers of) a process whose window is closed to the tray, which breaks the audio up.
 #[cfg(windows)]
-pub fn lower_process_priority() {
-    use windows_sys::Win32::System::Threading::{GetCurrentProcess, SetPriorityClass, BELOW_NORMAL_PRIORITY_CLASS};
+pub fn raise_process_priority() {
+    use windows_sys::Win32::System::Threading::{
+        GetCurrentProcess, ProcessPowerThrottling, SetPriorityClass, SetProcessInformation, ABOVE_NORMAL_PRIORITY_CLASS,
+        PROCESS_POWER_THROTTLING_CURRENT_VERSION, PROCESS_POWER_THROTTLING_EXECUTION_SPEED,
+        PROCESS_POWER_THROTTLING_IGNORE_TIMER_RESOLUTION, PROCESS_POWER_THROTTLING_STATE,
+    };
     unsafe {
-        SetPriorityClass(GetCurrentProcess(), BELOW_NORMAL_PRIORITY_CLASS);
+        let me = GetCurrentProcess();
+        SetPriorityClass(me, ABOVE_NORMAL_PRIORITY_CLASS);
+        let state = PROCESS_POWER_THROTTLING_STATE {
+            Version: PROCESS_POWER_THROTTLING_CURRENT_VERSION,
+            ControlMask: PROCESS_POWER_THROTTLING_EXECUTION_SPEED | PROCESS_POWER_THROTTLING_IGNORE_TIMER_RESOLUTION,
+            StateMask: 0, // 0 = throttling off for both
+        };
+        SetProcessInformation(me, ProcessPowerThrottling, &state as *const _ as *const _, std::mem::size_of_val(&state) as u32);
     }
 }
 
@@ -25,4 +37,4 @@ pub fn lower_process_priority() {
 pub fn boost_audio_thread() {}
 
 #[cfg(not(windows))]
-pub fn lower_process_priority() {}
+pub fn raise_process_priority() {}
